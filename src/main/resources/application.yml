@@ -4,8 +4,8 @@ spring:
     username: EARN_WHILE_TRAVEL
     password: root
     driver-class-name: oracle.jdbc.OracleDriver
+
   jpa:
-    database-platform: org.hibernate.dialect.Oracle12cDialect
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -15,10 +15,13 @@ springdoc:
     enabled: true
   swagger-ui:
     enabled: true
-    path: /swagger-ui
-
+    path: /
 
 server:
   port: 8600
   servlet:
-    context-path: /entry
+    context-path: /ewt
+
+logging:
+  level:
+    com.zaxxer.hikari: ERROR  # 🔹 Correct indentation here!
