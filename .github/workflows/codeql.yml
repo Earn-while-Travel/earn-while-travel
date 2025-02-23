@@ -18,7 +18,7 @@ on:
     branches: [ "develop" ]
   schedule:
     - cron: '28 0 * * 0'
-
+  workflow_dispatch:  # 👈 This enables the "Run workflow" button
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
