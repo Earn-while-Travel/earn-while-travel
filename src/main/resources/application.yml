@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521/XEPDB1
-    username: EARN_WHILE_TRAVEL
-    password: root
+    url: ${DB+URL}
+    username: ${DB-User-Name}
+    password: ${DB_USER_PASSWORD}
     driver-class-name: oracle.jdbc.OracleDriver
 
   jpa:

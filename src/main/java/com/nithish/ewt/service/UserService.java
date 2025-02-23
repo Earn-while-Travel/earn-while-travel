@@ -8,6 +8,8 @@ public  interface UserService {
 
 	UserResponse getAllUsers();
 	UserTable saveUser(UserDto dto);
+	int updateUserEmail(long userId, String email);
+	int deleteUserProfile(String userGmail);
 	
 	
 
