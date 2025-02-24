@@ -1,6 +1,7 @@
 package com.nithish.ewt.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,6 +29,14 @@ public interface UserRepository extends JpaRepository<UserTable, Integer> {
 	@Modifying
 	int deleteByUserGmail(String userGmail);
 
-	// UserTable save(UserDto dto);
+	Optional<UserProjection> findByUserId(long long1);
+
+	Optional<UserProjection> findByUserRegisterNbr(String query);
+
+	Optional<UserProjection> findByUserGmail(String query);
+
+	Optional<UserProjection> findByUserName(String query);
+
+
 
 }

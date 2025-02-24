@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nithish.ewt.dto.ApiResponse;
 import com.nithish.ewt.dto.UserDto;
 import com.nithish.ewt.dto.UserProjection;
 import com.nithish.ewt.dto.UserResponse;
@@ -39,28 +40,31 @@ public class UserSericeImpl implements UserService {
 
 	@Override
 	@Transactional
-	public UserTable saveUser(UserDto dto) {
+	public ApiResponse saveUser(UserDto dto) {
 
 		if (repository.existsByUserGmail(dto.getUserGmail())) {
 			LOGGER.error(Constants.EMAIL_ALREADY_EXISTS, dto.getUserGmail());
 			throw new EWTException(Constants.EMAIL_ALREADY_EXISTS + dto.getUserGmail());
 		}
 		if (repository.existsByUserRegisterNbr(dto.getUserRegisterNbr())) {
-			LOGGER.info(Constants.REGISTER_NUMBER_ALREADY_EXISTS , dto.getUserRegisterNbr());
+			LOGGER.info(Constants.REGISTER_NUMBER_ALREADY_EXISTS, dto.getUserRegisterNbr());
 			throw new EWTException(Constants.REGISTER_NUMBER_ALREADY_EXISTS + dto.getUserRegisterNbr());
 		}
-		LOGGER.info("Creating user with email: {} ",dto.getUserGmail());
+		LOGGER.info("Creating user with email: {} ", dto.getUserGmail());
 		UserTable user = new UserTable();
 		user.setUserName(dto.getUserName());
 		user.setUserGmail(dto.getUserGmail());
 		user.setUserRegisterNbr(dto.getUserRegisterNbr());
 
-		return repository.save(user);
+		repository.save(user);
+		
+		return new ApiResponse("success","User Profile has been saved",true);
+		
 	}
 
 	@Override
 	@Transactional
-	public int updateUserEmail(long userId, String email) throws EWTException{
+	public ApiResponse updateUserEmail(long userId, String email) throws EWTException {
 		boolean existCheck = repository.existsByUserGmail(email);
 		if (existCheck) {
 			throw new EWTException(Constants.EMAIL_ALREADY_EXISTS + email);
@@ -69,17 +73,36 @@ public class UserSericeImpl implements UserService {
 		if (updatedRows == 0) {
 			throw new EWTException("User Not updated for given email " + email);
 		}
-		return updatedRows;
+		return new ApiResponse("success","Email has been Updated",true);
+	
 
 	}
 
 	@Override
 	@Transactional
-	public int deleteUserProfile(String userGmail) {
+	public ApiResponse deleteUserProfile(String userGmail) {
 		int deletedRows = repository.deleteByUserGmail(userGmail);
 		if (deletedRows == 0) {
 			throw new EWTException("No user present with given user email: " + userGmail);
 		}
-		return deletedRows;
+		return new ApiResponse("success", "User profile has been removed",true);
+	}
+
+	@Override
+	public UserProjection globalSearch(String query) {
+		if (query.matches("\\d+")) {
+			LOGGER.info("Seach matches With digit searching: {}",query);
+			return repository.findByUserId(Long.parseLong(query))
+					.or(() -> repository.findByUserRegisterNbr(query))
+					.orElseThrow(() -> new EWTException("User Not found for given UserId or RegisterNbr " + query)); // handling
+		}
+		if (query.contains("@")) {
+			LOGGER.info("Seach matches With String searching: {}",query);
+			return repository.findByUserGmail(query)
+					.or(()-> repository.findByUserName(query))
+					.orElseThrow(() -> new EWTException("User Not Found for Given User email " + query));
+		}
+
+		throw new EWTException("Search query must be a valid User ID, Registration Number, or Email" + query);
 	}
 }
