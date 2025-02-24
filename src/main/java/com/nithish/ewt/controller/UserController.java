@@ -1,4 +1,4 @@
-package com.nithish.ewt.Controller;
+package com.nithish.ewt.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

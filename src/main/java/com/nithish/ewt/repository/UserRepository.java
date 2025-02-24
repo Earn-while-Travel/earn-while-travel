@@ -1,6 +1,5 @@
 package com.nithish.ewt.repository;
 
-
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,19 +13,21 @@ import com.nithish.ewt.entity.UserTable;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserTable, Integer> {
-	
-	@Query(value ="Select * from EARN_WHILE_TRAVEL.user_info", nativeQuery = true)
-	List<UserProjection> getAllUsers();
-	
-	 	boolean existsByUserGmail(String userGmail);
-	    boolean existsByUserRegisterNbr(String userRegisterNbr);
-		@Modifying
-	    @Query(value ="Update EARN_WHILE_TRAVEL.user_info   set user_Gmail = :email where user_Id =:userId",nativeQuery=true)
-	    int updateUserGmailbyUserId(@Param("userId") long userId, @Param("email") String email);
-		@Modifying
-		int deleteByUserGmail(String  userGmail);
-		
 
-	//UserTable save(UserDto dto);
+	@Query(value = "Select * from EARN_WHILE_TRAVEL.user_info", nativeQuery = true)
+	List<UserProjection> getAllUsers();
+
+	boolean existsByUserGmail(String userGmail);
+
+	boolean existsByUserRegisterNbr(String userRegisterNbr);
+
+	@Modifying
+	@Query(value = "Update EARN_WHILE_TRAVEL.user_info   set user_Gmail = :email where user_Id =:userId", nativeQuery = true)
+	int updateUserGmailbyUserId(@Param("userId") long userId, @Param("email") String email);
+
+	@Modifying
+	int deleteByUserGmail(String userGmail);
+
+	// UserTable save(UserDto dto);
 
 }

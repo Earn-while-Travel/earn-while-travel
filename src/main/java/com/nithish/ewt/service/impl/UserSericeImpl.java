@@ -1,4 +1,4 @@
-package com.nithish.ewt.serviceImpl;
+package com.nithish.ewt.service.impl;
 
 import java.util.List;
 
@@ -30,7 +30,6 @@ public class UserSericeImpl implements UserService {
 
 	@Override
 	public UserResponse getAllUsers() {
-		// TODO Auto-generated method stub
 		UserResponse response = new UserResponse();
 		List<UserProjection> projections = repository.getAllUsers();
 		response.setRegResponse(projections);
@@ -43,14 +42,14 @@ public class UserSericeImpl implements UserService {
 	public UserTable saveUser(UserDto dto) {
 
 		if (repository.existsByUserGmail(dto.getUserGmail())) {
-			LOGGER.error(Constants.EMAIL_ALREADY_EXISTS + dto.getUserGmail());
+			LOGGER.error(Constants.EMAIL_ALREADY_EXISTS, dto.getUserGmail());
 			throw new EWTException(Constants.EMAIL_ALREADY_EXISTS + dto.getUserGmail());
 		}
 		if (repository.existsByUserRegisterNbr(dto.getUserRegisterNbr())) {
-			LOGGER.info(Constants.REGISTER_NUMBER_ALREADY_EXISTS + dto.getUserRegisterNbr());
+			LOGGER.info(Constants.REGISTER_NUMBER_ALREADY_EXISTS , dto.getUserRegisterNbr());
 			throw new EWTException(Constants.REGISTER_NUMBER_ALREADY_EXISTS + dto.getUserRegisterNbr());
 		}
-		LOGGER.info("Creating user with email: " + dto.getUserGmail());
+		LOGGER.info("Creating user with email: {} ",dto.getUserGmail());
 		UserTable user = new UserTable();
 		user.setUserName(dto.getUserName());
 		user.setUserGmail(dto.getUserGmail());
@@ -61,7 +60,7 @@ public class UserSericeImpl implements UserService {
 
 	@Override
 	@Transactional
-	public int updateUserEmail(long userId, String email) {
+	public int updateUserEmail(long userId, String email) throws EWTException{
 		boolean existCheck = repository.existsByUserGmail(email);
 		if (existCheck) {
 			throw new EWTException(Constants.EMAIL_ALREADY_EXISTS + email);
