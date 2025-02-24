@@ -7,11 +7,11 @@ on:
   pull_request:
     branches: [ "develop" ]
   schedule:
-    - cron: '43 4 * * 0'  # Runs every Sunday at 04:43 UTC
+    - cron: '43 4 * * 0'  # Weekly scan
 
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }})
+    name: Analyze Java & Kotlin Code
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -23,35 +23,35 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - language: java
-            build-mode: manual  # Required to manually build Java projects
+          - language: java-kotlin
+            build-mode: manual  # Required for Maven builds
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'  # Use Temurin (AdoptOpenJDK)
-          java-version: '17'  # Adjust based on your project's JDK version
-          cache: maven
+    - name: Set up JDK (AdoptOpenJDK)
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'adopt'  # Using AdoptOpenJDK
+        java-version: '17'  # Change if using a different version
+        cache: 'maven'
 
-      - name: Set up Maven
-        uses: stCarolas/setup-maven@v4
-        with:
-          maven-version: '3.8.6'  # Adjust based on your Maven version
+    - name: Set up Maven
+      run: |
+        mvn -version
 
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        build-mode: ${{ matrix.build-mode }}
+        queries: security-extended,security-and-quality  # Enables log injection detection
 
-      - name: Build with Maven
-        run: mvn clean install -DskipTests  # Skipping tests to speed up analysis
+    - name: Build with Maven (for Java & Kotlin)
+      run: mvn clean install -DskipTests
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:${{ matrix.language }}"
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
