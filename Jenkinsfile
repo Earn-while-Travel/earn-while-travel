@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        RUN_LOCALLY = 'true'  // Set to 'true' to run locally, 'false' or not set to skip
+    }
     stages {
         stage('Checkout') {
             steps {
