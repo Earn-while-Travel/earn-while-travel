@@ -3,37 +3,44 @@ name: Java 17 CI/CD Pipeline
 on:
   push:
     branches:
-      - develop  # Trigger when pushing to the develop branch
+      - develop
   pull_request:
     branches:
-      - develop  # Trigger for pull requests targeting the develop branch
+      - develop
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code
+      # Checkout the code from the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Setup Java JDK 17 (AdoptOpenJDK or Zulu)
-      - name: Setup Java JDK 17
-        uses: actions/setup-java@v2  # Stable version
+      # Setup Java JDK (Java 17)
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.7.0
         with:
-          java-version: '17'  # Set Java version to 17
-          distribution: 'adoptopenjdk'  # Corrected distribution name (AdoptOpenJDK)
+          java-version: '17'  # Specify the version of Java
+          distribution: 'adoptopenjdk'  # Java distribution (e.g., adoptopenjdk or zulu)
+          java-package: 'jdk'  # Use JDK package type (default is 'jdk')
+          architecture: 'x64'  # Architecture type (typically 'x64' for 64-bit systems)
+          check-latest: false  # Option to check the latest available version (set to false)
+          server-id: 'github'  # Default is 'github' for Maven repository ID
+          server-username: ${{ github.actor }}  # GitHub actor (username for authentication)
+          server-password: ${{ github.token }}  # GitHub token for authentication
+          settings-path: ~/.m2  # Path to Maven settings.xml file
+          overwrite-settings: true  # Overwrite the existing settings.xml file if it exists
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}  # Optional: GPG private key for signing
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}  # Optional: GPG passphrase for signing
+          cache: 'maven'  # Enable Maven dependency caching
+          cache-dependency-path: '**/pom.xml'  # Path to pom.xml for caching dependencies
+          job-status: ${{ job.status }}  # Pass job status to post-job step
+          token: ${{ github.token }}  # Token for authenticating with GitHub's package registry
+          mvn-toolchain-id: 'adoptopenjdk_17'  # Maven toolchain ID for Java 17 (optional)
+          mvn-toolchain-vendor: 'adoptopenjdk'  # Maven toolchain vendor (optional)
 
-      # Cache Maven dependencies (for faster builds)
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3  # Updated to v3
-        with:
-          path: ~/.m2/repository  # Cache Maven dependencies
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}  # Cache key based on pom.xml
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      # Build with Maven
+      # Build the project with Maven (without tests)
       - name: Build with Maven
         run: mvn clean install -DskipTests
 
@@ -41,12 +48,12 @@ jobs:
       - name: Run tests with Maven
         run: mvn test
 
-      # Optional: Deploy to production (you can replace this with actual deployment steps)
+      # Deploy to production (this is a placeholder, adjust based on your deployment process)
       - name: Deploy to production
         run: |
           echo "Deploying to production environment..."
 
-      # Clean up orphan processes (if needed)
+      # Clean up orphan processes (to ensure no lingering processes after the build)
       - name: Clean up orphan processes
         run: |
           ps aux | grep '[o]rphan_process' | awk '{print $2}' | xargs kill -9 || true
