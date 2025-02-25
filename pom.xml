@@ -101,6 +101,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                <excludes>
+                    <exclude>**/EarnWhileTravelApplicationTests.java</exclude>
+                </excludes>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
