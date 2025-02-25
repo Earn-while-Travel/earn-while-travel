@@ -24,8 +24,6 @@ pipeline {
 
         stage('Run Application') {
             steps {
-                // Run the application after confirming the environment variables
-                echo "Running the application with the environment variables..."
                 bat '''
                 echo "DB_URL is: %DB_URL%"
                 echo "DB_USERNAME is: %DB_USERNAME%"
