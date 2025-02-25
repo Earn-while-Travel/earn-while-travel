@@ -45,12 +45,13 @@ pipeline {
                         bat 'set DB_URL=jdbc:oracle:thin:@localhost:1521/XEPDB1'
                         bat 'set DB_USERNAME=EARN_WHILE_TRAVEL'
                         bat 'set DB_PASSWORD=root'
-
+                        
+						bat 'java -jar target/demo-0.0.1-SNAPSHOT.jar'
                         // Run the application
                         
                     } else {
                         echo 'Skipping application run in Jenkins pipeline.'
-                        bat 'java -jar target/demo-0.0.1-SNAPSHOT.jar'
+                       
                     }
                 }
             }
