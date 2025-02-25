@@ -9,7 +9,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the project...'
-                bat 'mvn clean install'  // Adjust based on your build tool
+                bat 'mvn clean install'
             }
         }
         stage('Print Environment Variables') {
@@ -31,9 +31,13 @@ pipeline {
                     // Verify Java version (optional)
                     bat 'java -version'
                     
-                    // Run the application
-                    echo 'Running the application...'
-                    bat 'java -jar target/demo-0.0.1-SNAPSHOT.jar'
+                    // Check if we are running locally
+                    if (env.RUN_LOCALLY == 'true') {
+                        echo 'Running the application locally...'
+                        bat 'java -jar target/demo-0.0.1-SNAPSHOT.jar'
+                    } else {
+                        echo 'Skipping application run in Jenkins pipeline.'
+                    }
                 }
             }
         }
