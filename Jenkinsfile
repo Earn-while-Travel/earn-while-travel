@@ -42,9 +42,9 @@ pipeline {
                         echo 'Setting up environment variables for local run:'
 
                         // Set local environment variables for DB connection
-                        bat 'set DB_URL=jdbc:oracle:thin:@your-db-url:1521:yourdb'
-                        bat 'set DB_USERNAME=your_db_username'
-                        bat 'set DB_PASSWORD=your_db_password'
+                        bat 'set DB_URL=jdbc:oracle:thin:@localhost:1521/XEPDB1'
+                        bat 'set DB_USERNAME=EARN_WHILE_TRAVEL'
+                        bat 'set DB_PASSWORD=root'
 
                         // Run the application
                         
