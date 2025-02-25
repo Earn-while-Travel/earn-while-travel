@@ -36,9 +36,20 @@ pipeline {
                     
                     // Check if we are running locally
                     if (env.RUN_LOCALLY == 'true') {
-						echo 'Skipping application run in Jenkins pipeline.' 
+                        echo 'Running the application locally...'
+
+                        // Ensure that DB_URL, DB_USERNAME, and DB_PASSWORD are set locally before running
+                        echo 'Setting up environment variables for local run:'
+
+                        // Set local environment variables for DB connection
+                        bat 'set DB_URL=jdbc:oracle:thin:@your-db-url:1521:yourdb'
+                        bat 'set DB_USERNAME=your_db_username'
+                        bat 'set DB_PASSWORD=your_db_password'
+
+                        // Run the application
+                        
                     } else {
-						echo 'Running the application locally...'
+                        echo 'Skipping application run in Jenkins pipeline.'
                         bat 'java -jar target/demo-0.0.1-SNAPSHOT.jar'
                     }
                 }
