@@ -8,21 +8,20 @@ pipeline {
     }
 
     stages {
-        stage('Cleanup') {
-            steps {
-                cleanWs() // Forcefully clean workspace before running the job
-            }
-        }
-
         stage('Build') {
             steps {
-                bat 'mvn clean package -DskipTests' // Windows batch command to build the project
+                bat 'mvn clean package -DskipTests'
             }
         }
 
         stage('Run Application') {
             steps {
-                bat "java -jar target/demo-0.0.1-SNAPSHOT.jar" // Running the Spring Boot application
+                bat '''
+                set DB_URL=jdbc:oracle:thin:@localhost:1521/XEPDB1
+                set DB_USERNAME=EARN_WHILE_TRAVEL
+                set DB_PASSWORD=root
+                java -jar target/demo-0.0.1-SNAPSHOT.jar
+                '''
             }
         }
     }
