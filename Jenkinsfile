@@ -36,10 +36,10 @@ pipeline {
                     
                     // Check if we are running locally
                     if (env.RUN_LOCALLY == 'true') {
-                        echo 'Running the application locally...'
-                        bat 'java -jar target/demo-0.0.1-SNAPSHOT.jar'
+						echo 'Skipping application run in Jenkins pipeline.' 
                     } else {
-                        echo 'Skipping application run in Jenkins pipeline.'
+						echo 'Running the application locally...'
+                        bat 'java -jar target/demo-0.0.1-SNAPSHOT.jar'
                     }
                 }
             }
