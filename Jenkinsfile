@@ -16,20 +16,26 @@ pipeline {
 
         stage('Print Environment Variables') {
             steps {
-                echo "DB_URL is: ${env.DB_URL}"
-                echo "DB_USERNAME is: ${env.DB_USERNAME}"
-                echo "DB_PASSWORD is: ${env.DB_PASSWORD}"
+                withEnv(["DB_URL=${env.DB_URL}", "DB_USERNAME=${env.DB_USERNAME}", "DB_PASSWORD=${env.DB_PASSWORD}"]) {
+                    bat '''
+                    echo DB_URL is: %DB_URL%
+                    echo DB_USERNAME is: %DB_USERNAME%
+                    echo DB_PASSWORD is: %DB_PASSWORD%
+                    '''
+                }
             }
         }
 
         stage('Run Application') {
             steps {
-                bat '''
-                echo "DB_URL is: %DB_URL%"
-                echo "DB_USERNAME is: %DB_USERNAME%"
-                echo "DB_PASSWORD is: %DB_PASSWORD%"
-                java -jar target/demo-0.0.1-SNAPSHOT.jar
-                '''
+                withEnv(["DB_URL=${env.DB_URL}", "DB_USERNAME=${env.DB_USERNAME}", "DB_PASSWORD=${env.DB_PASSWORD}"]) {
+                    bat '''
+                    echo DB_URL is: %DB_URL%
+                    echo DB_USERNAME is: %DB_USERNAME%
+                    echo DB_PASSWORD is: %DB_PASSWORD%
+                    java -jar target/demo-0.0.1-SNAPSHOT.jar
+                    '''
+                }
             }
         }
     }
