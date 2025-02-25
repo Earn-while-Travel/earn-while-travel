@@ -1,14 +1,16 @@
 spring:
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521/XEPDB1
-    username: EARN_WHILE_TRAVEL
-    password: root
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: oracle.jdbc.OracleDriver
 
   jpa:
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+    show-sql: true
     hibernate:
       ddl-auto: update
-    show-sql: true
+
 
 springdoc:
   api-docs:
