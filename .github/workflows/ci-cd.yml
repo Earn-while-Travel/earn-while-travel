@@ -3,10 +3,10 @@ name: Java 17 CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Trigger when pushing to the main branch
+      - develop  # Trigger when pushing to the main branch
   pull_request:
     branches:
-      - main  # Trigger for pull requests targeting the main branch
+      - develop  # Trigger for pull requests targeting the main branch
 
 jobs:
   build:
