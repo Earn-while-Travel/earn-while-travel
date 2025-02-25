@@ -16,7 +16,6 @@ pipeline {
 
         stage('Print Environment Variables') {
             steps {
-                // Print environment variables to the Jenkins console
                 echo "DB_URL is: ${env.DB_URL}"
                 echo "DB_USERNAME is: ${env.DB_USERNAME}"
                 echo "DB_PASSWORD is: ${env.DB_PASSWORD}"
@@ -25,7 +24,14 @@ pipeline {
 
         stage('Run Application') {
             steps {
-                bat 'java -jar target/demo-0.0.1-SNAPSHOT.jar'
+                // Run the application after confirming the environment variables
+                echo "Running the application with the environment variables..."
+                bat '''
+                echo "DB_URL is: %DB_URL%"
+                echo "DB_USERNAME is: %DB_USERNAME%"
+                echo "DB_PASSWORD is: %DB_PASSWORD%"
+                java -jar target/demo-0.0.1-SNAPSHOT.jar
+                '''
             }
         }
     }
