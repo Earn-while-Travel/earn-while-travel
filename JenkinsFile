@@ -8,27 +8,21 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Cleanup') {
             steps {
-                git branch: 'main', url: 'https://github.com/YOUR_GITHUB_REPO.git'
+                cleanWs() // Forcefully clean workspace before running the job
             }
         }
 
         stage('Build') {
             steps {
-                script {
-                    sh 'echo "Building the application..."'
-                    sh 'mvn clean package -DskipTests'
-                }
+                bat 'mvn clean package -DskipTests' // Windows batch command to build the project
             }
         }
 
         stage('Run Application') {
             steps {
-                script {
-                    sh 'echo "Starting Spring Boot Application..."'
-                    sh 'java -jar target/*.jar'
-                }
+                bat "java -jar target/demo-0.0.1-SNAPSHOT.jar" // Running the Spring Boot application
             }
         }
     }
