@@ -12,7 +12,7 @@ import lombok.Setter;
 public class EwtAlert {
 
 
-	String errorCode;
-	String errMsg;
+	private String errorCode;
+	private String errMsg;
 }
 

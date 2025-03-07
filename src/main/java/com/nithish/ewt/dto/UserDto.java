@@ -13,13 +13,22 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserDto {
 
+    /**
+     * userName
+     */
     @NotNull(message = "User name cannot be null")
     private String userName;
 
+    /**
+     *userGmail 
+     */
     @NotNull(message = "Email cannot be null")
     @Email(message = "Invalid email format")
     private String userGmail;
 
+    /**
+     * userRegisterNbr
+     */
     @NotNull(message = "Register number cannot be null")
     private String userRegisterNbr;
 

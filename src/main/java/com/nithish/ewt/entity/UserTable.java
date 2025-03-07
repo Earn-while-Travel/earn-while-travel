@@ -15,16 +15,28 @@ import lombok.Setter;
 @Table(name = "user_info",schema="EARN_WHILE_TRAVEL")
 public class UserTable {
 
+    /**
+     * userId
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
+    /**
+     * userName
+     */
     @Column(name = "user_name", nullable = false)
     private String userName;
 
+    /**
+     * 
+     */
     @Column(name = "user_gmail", nullable = false, unique = true)
     private String userGmail;
 
+    /**
+     * userRegisterNbr
+     */
     @Column(name = "user_register_nbr", nullable = false, unique = true)
     private String userRegisterNbr;
     

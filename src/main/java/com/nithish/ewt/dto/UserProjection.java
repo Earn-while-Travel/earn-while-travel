@@ -2,12 +2,26 @@ package com.nithish.ewt.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({"userId","userName","userGmail","userRegisterNbr"})
+@JsonPropertyOrder({ "userId", "userName", "userGmail", "userRegisterNbr" })
 public interface UserProjection {
+	/**
+	 * @return userId
+	 */
 	int getUserId();
+
+	/**
+	 * @return userName
+	 */
 	String getUserName();
+
+	/**
+	 * @return
+	 */
 	String getUserGmail();
-	
+
+	/**
+	 * @return usrRegisterNbr
+	 */
 	String getUserRegisterNbr();
 
 }
