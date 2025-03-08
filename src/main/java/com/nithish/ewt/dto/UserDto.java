@@ -31,6 +31,9 @@ public class UserDto {
      */
     @NotNull(message = "Register number cannot be null")
     private String userRegisterNbr;
+    
+    @NotNull(message ="Password Cannot be Empty")
+    private String userPassword;
 
 
 }

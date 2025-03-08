@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ import jakarta.validation.Valid;
 public class UserController {
 
 	private UserService userService;
+	
 	@Autowired
 	public UserController(UserService userService) {
 		this.userService = userService;
@@ -37,7 +39,7 @@ public class UserController {
 	@GetMapping(value="/getAllUsers",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserResponse> getAllUser() {
 		UserResponse response = userService.getAllUsers();
-		return new ResponseEntity<UserResponse>(response, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	@Operation(summary="Create user", description="Create a new user")
 	@PostMapping(value="/saveUser", produces = MediaType.APPLICATION_JSON_VALUE)
