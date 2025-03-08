@@ -7,13 +7,11 @@ spring:
   hikari:
     connection-timeout: 30000
     maximum-pool-size: 5
-
   jpa:
     database-platform: org.hibernate.dialect.OracleDialect
     show-sql: true
     hibernate:
       ddl-auto: update
-
 
 springdoc:
   api-docs:
@@ -29,4 +27,4 @@ server:
 
 logging:
   level:
-    com.zaxxer.hikari: ERROR  # 🔹 Correct indentation here!
+    com.zaxxer.hikari: ERROR  # 🔹 Fixed indentation
