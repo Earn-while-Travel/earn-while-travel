@@ -23,5 +23,7 @@ public interface UserProjection {
 	 * @return usrRegisterNbr
 	 */
 	String getUserRegisterNbr();
+	
+	String getUserPassword();
 
 }

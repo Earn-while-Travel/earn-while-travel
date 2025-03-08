@@ -55,6 +55,7 @@ public class UserSericeImpl implements UserService {
 		user.setUserName(dto.getUserName());
 		user.setUserGmail(dto.getUserGmail());
 		user.setUserRegisterNbr(dto.getUserRegisterNbr());
+		user.setUserPassword(dto.getUserPassword());
 
 		repository.save(user);
 		
@@ -91,7 +92,7 @@ public class UserSericeImpl implements UserService {
 	@Override
 	public UserProjection globalSearch(String query) {
 		if (query.matches("\\d+")) {
-			LOGGER.info("Seach matches With digit searching: {}",query);
+			LOGGER.info("Search matches With digit searching: {}",query);
 			return repository.findByUserId(Long.parseLong(query))
 					.or(() -> repository.findByUserRegisterNbr(query))
 					.orElseThrow(() -> new EWTException("User Not found for given UserId or RegisterNbr " + query)); // handling

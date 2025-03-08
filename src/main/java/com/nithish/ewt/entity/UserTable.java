@@ -40,6 +40,10 @@ public class UserTable {
     @Column(name = "user_register_nbr", nullable = false, unique = true)
     private String userRegisterNbr;
     
+    
+    @Column(name ="user_password",nullable = false)
+    private String userPassword;
+    
 
 
     // Getters & Setters
