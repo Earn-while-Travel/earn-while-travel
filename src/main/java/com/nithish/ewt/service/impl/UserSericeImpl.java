@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +25,12 @@ public class UserSericeImpl implements UserService {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(UserSericeImpl.class);
 	UserRepository repository;
+	private final PasswordEncoder passwordEncoder;
 
 	@Autowired
 	UserSericeImpl(UserRepository repository) {
 		this.repository = repository;
+		passwordEncoder = new BCryptPasswordEncoder();
 	}
 
 	@Override
@@ -39,29 +43,31 @@ public class UserSericeImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
-	public ApiResponse saveUser(UserDto dto) {
+    @Transactional
+    public ApiResponse saveUser(UserDto dto) {
+        if (repository.existsByUserGmail(dto.getUserGmail())) {
+            LOGGER.error(Constants.EMAIL_ALREADY_EXISTS, dto.getUserGmail());
+            throw new EWTException(Constants.EMAIL_ALREADY_EXISTS + dto.getUserGmail());
+        }
 
-		if (repository.existsByUserGmail(dto.getUserGmail())) {
-			LOGGER.error(Constants.EMAIL_ALREADY_EXISTS, dto.getUserGmail());
-			throw new EWTException(Constants.EMAIL_ALREADY_EXISTS + dto.getUserGmail());
-		}
-		if (repository.existsByUserRegisterNbr(dto.getUserRegisterNbr())) {
-			LOGGER.info(Constants.REGISTER_NUMBER_ALREADY_EXISTS, dto.getUserRegisterNbr());
-			throw new EWTException(Constants.REGISTER_NUMBER_ALREADY_EXISTS + dto.getUserRegisterNbr());
-		}
-		LOGGER.info("Creating user with email: {} ", dto.getUserGmail());
-		UserTable user = new UserTable();
-		user.setUserName(dto.getUserName());
-		user.setUserGmail(dto.getUserGmail());
-		user.setUserRegisterNbr(dto.getUserRegisterNbr());
-		user.setUserPassword(dto.getUserPassword());
+        if (repository.existsByUserRegisterNbr(dto.getUserRegisterNbr())) {
+            LOGGER.info(Constants.REGISTER_NUMBER_ALREADY_EXISTS, dto.getUserRegisterNbr());
+            throw new EWTException(Constants.REGISTER_NUMBER_ALREADY_EXISTS + dto.getUserRegisterNbr());
+        }
 
-		repository.save(user);
-		
-		return new ApiResponse("success","User Profile has been saved",true);
-		
-	}
+        LOGGER.info("Creating user with email: {}", dto.getUserGmail());
+
+        UserTable user = new UserTable();
+        user.setUserName(dto.getUserName());
+        user.setUserGmail(dto.getUserGmail());
+        user.setUserRegisterNbr(dto.getUserRegisterNbr());
+        
+        // ✅ Encrypt the password before saving
+        user.setUserPassword(passwordEncoder.encode(dto.getUserPassword()));
+
+        repository.save(user);
+        return new ApiResponse("success", "User Profile has been saved", true);
+    }
 
 	@Override
 	@Transactional

@@ -14,6 +14,7 @@ public class SecurityConfig {
 	        .csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(auth -> auth
 	            .requestMatchers("/", "/public").permitAll()
+	            .requestMatchers("/onboard/api/", "/public").permitAll()
 	            .anyRequest().authenticated()
 	        )
 	        .oauth2Login(oauth2 -> oauth2
