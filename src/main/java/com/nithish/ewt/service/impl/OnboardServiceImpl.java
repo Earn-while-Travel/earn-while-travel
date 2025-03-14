@@ -1,10 +1,12 @@
 package com.nithish.ewt.service.impl;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,27 +28,34 @@ public class OnboardServiceImpl implements OnboardService {
 		this.passwordEncoder = new BCryptPasswordEncoder();
 	}
 
-	public boolean userLogin(UserLoginDto userCredentials) {
+	public Optional<UserDetails> userLogin(UserLoginDto userCredentials) {
 		Optional<UserLoginProjection> optionalUser = onboardRepository.findByUserGmail(userCredentials.getUserGmail());
 
 		if (optionalUser.isEmpty()) {
 			LOGGER.warn("Login failed: User not found for email {}", userCredentials.getUserGmail());
-			return false;
+			return Optional.empty();
 		}
 
 		UserLoginProjection user = optionalUser.get();
 
 		if (!passwordEncoder.matches(userCredentials.getUserPassword(), user.getUserPassword())) {
 			LOGGER.warn("Login failed: Incorrect password for email {}", userCredentials.getUserGmail());
-			return false;
+			return Optional.empty();
 		}
 
 		if (!Objects.equals(user.getUserRegisterNbr(), userCredentials.getUserRegisterNbr())) {
 			LOGGER.warn("Login failed: Incorrect registration number for email {}", userCredentials.getUserGmail());
-			return false;
+			return Optional.empty();
 		}
 
 		LOGGER.info("User login successful: {}", userCredentials.getUserGmail());
-		return true;
+	    // Create UserDetails object
+	    UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+	        user.getUserGmail(),
+	        user.getUserPassword(),
+	        new ArrayList<>() // No specific roles for now
+	    );
+
+	    return Optional.of(userDetails);
 	}
 }
